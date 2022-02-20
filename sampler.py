@@ -34,7 +34,7 @@ import images2gif
 from images2gif import writeGif
 
 mgc = get_ipython().magic
-mgc(u'matplotlib inline')
+mgc('matplotlib inline')
 pylab.rcParams['figure.figsize'] = (10.0, 10.0)
 
 class Sampler():
@@ -112,5 +112,5 @@ class Sampler():
       revImages = revImages[1:]
       images = images+revImages
       durations = durations + [duration]*n_frame + [duration1]
-    print "writing gif file..."
+    print("writing gif file...")
     writeGif(filename, images, duration = durations)
