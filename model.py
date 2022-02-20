@@ -9,6 +9,9 @@ https://en.wikipedia.org/wiki/Compositional_pattern-producing_network
 
 import numpy as np
 import tensorflow as tf
+
+tf.compat.v1.disable_eager_execution()
+
 from ops import *
 
 class CPPN():
@@ -34,7 +37,7 @@ class CPPN():
     self.z_dim = z_dim
 
     # tf Graph batch of image (batch_size, height, width, depth)
-    self.batch = tf.placeholder(tf.float32, [batch_size, x_dim, y_dim, c_dim])
+    self.batch = tf.compat.v1.placeholder(tf.float32, [batch_size, x_dim, y_dim, c_dim])
 
     n_points = x_dim * y_dim
     self.n_points = n_points
@@ -42,11 +45,11 @@ class CPPN():
     self.x_vec, self.y_vec, self.r_vec = self._coordinates(x_dim, y_dim, scale)
 
     # latent vector
-    self.z = tf.placeholder(tf.float32, [self.batch_size, self.z_dim])
+    self.z = tf.compat.v1.placeholder(tf.float32, [self.batch_size, self.z_dim])
     # inputs to cppn, like coordinates and radius from centre
-    self.x = tf.placeholder(tf.float32, [self.batch_size, None, 1])
-    self.y = tf.placeholder(tf.float32, [self.batch_size, None, 1])
-    self.r = tf.placeholder(tf.float32, [self.batch_size, None, 1])
+    self.x = tf.compat.v1.placeholder(tf.float32, [self.batch_size, None, 1])
+    self.y = tf.compat.v1.placeholder(tf.float32, [self.batch_size, None, 1])
+    self.r = tf.compat.v1.placeholder(tf.float32, [self.batch_size, None, 1])
 
     # builds the generator network
     self.G = self.generator(x_dim = self.x_dim, y_dim = self.y_dim)
@@ -56,13 +59,13 @@ class CPPN():
   def init(self):
 
     # Initializing the tensor flow variables
-    init = tf.global_variables_initializer()
+    init = tf.compat.v1.global_variables_initializer()
     # Launch the session
-    self.sess = tf.Session()
+    self.sess = tf.compat.v1.Session()
     self.sess.run(init)
 
   def reinit(self):
-    init = tf.initialize_variables(tf.trainable_variables())
+    init = tf.compat.v1.initialize_variables(tf.compat.v1.trainable_variables())
     self.sess.run(init)
 
   def _coordinates(self, x_dim = 32, y_dim = 32, scale = 1.0):
@@ -83,7 +86,7 @@ class CPPN():
   def generator(self, x_dim, y_dim, reuse = False):
 
     if reuse:
-        tf.get_variable_scope().reuse_variables()
+        tf.compat.v1.get_variable_scope().reuse_variables()
 
     net_size = self.net_size
     n_points = x_dim * y_dim
